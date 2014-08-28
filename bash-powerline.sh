@@ -72,8 +72,6 @@ __powerline() {
             readonly PS_SYMBOL=$PS_SYMBOL_OTHER
     esac
 
-    __git_info() { 
-        [ -x "$(which git)" ] || return    # git not found
     __is_git_branch() {
       if (hash git &> /dev/null); then
         git rev-parse --is-inside-work-tree &> /dev/null
@@ -81,25 +79,28 @@ __powerline() {
       fi
     }
 
+    __git_info() {
+        if (__is_git_branch); then
 
-        # get current branch name or short SHA1 hash for detached head
-        local branch="$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always 2>/dev/null)"
-        [ -n "$branch" ] || return  # git branch not found
+            # get current branch name or short SHA1 hash for detached head
+            local branch="$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always 2>/dev/null)"
+            [ -n "$branch" ] || return  # git branch not found
 
-        local marks
+            local marks
 
-        # branch is modified?
-        [ -n "$(git status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
+            # branch is modified?
+            [ -n "$(git status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
 
-        # how many commits local branch is ahead/behind of remote?
-        local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
-        local aheadN="$(echo $stat | grep -o 'ahead \d\+' | grep -o '\d\+')"
-        local behindN="$(echo $stat | grep -o 'behind \d\+' | grep -o '\d\+')"
-        [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
-        [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
+            # how many commits local branch is ahead/behind of remote?
+            local stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
+            local aheadN="$(echo $stat | grep -o 'ahead \d\+' | grep -o '\d\+')"
+            local behindN="$(echo $stat | grep -o 'behind \d\+' | grep -o '\d\+')"
+            [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
+            [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
 
-        # print the git branch segment without a trailing newline
-        printf " $GIT_BRANCH_SYMBOL$branch$marks "
+            # print the git branch segment without a trailing newline
+            printf "$GIT_BRANCH_SYMBOL$branch$marks "
+        fi
     }
 
     ps1() {
