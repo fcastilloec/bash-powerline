@@ -74,6 +74,13 @@ __powerline() {
 
     __git_info() { 
         [ -x "$(which git)" ] || return    # git not found
+    __is_git_branch() {
+      if (hash git &> /dev/null); then
+        git rev-parse --is-inside-work-tree &> /dev/null
+        return $?
+      fi
+    }
+
 
         # get current branch name or short SHA1 hash for detached head
         local branch="$(git symbolic-ref --short HEAD 2>/dev/null || git describe --tags --always 2>/dev/null)"
