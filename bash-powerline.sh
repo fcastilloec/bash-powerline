@@ -10,7 +10,7 @@ __powerline() {
 
     # Unicode symbols
     readonly PS_SYMBOL_DARWIN=''
-    readonly PS_SYMBOL_LINUX='🐧'
+    readonly PS_SYMBOL_LINUX='$'
     readonly PS_SYMBOL_OTHER='%'
     readonly GIT_BRANCH_SYMBOL=''
     readonly GIT_BRANCH_CHANGED_SYMBOL='+'
@@ -116,7 +116,7 @@ __powerline() {
 
         PS1="$BG_BLUE$FG_BASE3 \h $RESET"
         PS1+="$BG_BASE00$FG_BLUE$PROMPT_DIVIDER$RESET"
-        PS1+="$BG_BASE00$FG_BASE3\w $RESET"
+        PS1+="$BG_BASE00$FG_BASE3 \w $RESET"
         if (__is_git_branch); then
             PS1+="$BG_BLUE$FG_BASE00$PROMPT_DIVIDER$RESET"
             PS1+="$BG_BLUE$FG_BASE3$(__git_info)$RESET"
@@ -124,7 +124,7 @@ __powerline() {
         else
             PS1+="$BG_EXIT$FG_BASE00$PROMPT_DIVIDER$RESET"
         fi
-        PS1+="$BG_EXIT$FG_BASE3$PS_SYMBOL$RESET"
+        PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET"
         PS1+="$FG_EXIT$PROMPT_DIVIDER$RESET "
     }
 
