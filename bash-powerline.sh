@@ -2,31 +2,41 @@
 
 __powerline() {
 
-    ## for standard fonts
+    ## standard fonts
     # ▷ ◣ ▶︎ ➤ 〉  $ % ⑂ + ⇡ ⇣
 
     ## for powerline patched fonts
     # █       
 
-    # Unicode symbols
+    # symbols
     readonly PS_SYMBOL_DARWIN=''
     readonly PS_SYMBOL_LINUX='\$'
     readonly PS_SYMBOL_OTHER='%'
-    readonly GIT_BRANCH_SYMBOL=''
     readonly GIT_BRANCH_CHANGED_SYMBOL='+'
     readonly GIT_NEED_PUSH_SYMBOL='⇡'
     readonly GIT_NEED_PULL_SYMBOL='⇣'
-    readonly PROMPT_DIVIDER=''
+
+    # This is working for me, but I need to figure out
+    # a good way to indicate whether we should use 
+    # powerline-fonts or not.
+    if [[ $TERM = "xterm-16color" ]]; then
+      # use standard fonts
+      readonly PROMPT_DIVIDER=''
+      readonly GIT_BRANCH_SYMBOL='⑂'
+    else # use powerline-fonts
+      readonly PROMPT_DIVIDER=''
+      readonly GIT_BRANCH_SYMBOL=''
+    fi
 
     # Solarized colorscheme
-    readonly FG_BASE03="\[$(tput setaf 8)\]"
-    readonly FG_BASE02="\[$(tput setaf 0)\]"
-    readonly FG_BASE01="\[$(tput setaf 10)\]"
-    readonly FG_BASE00="\[$(tput setaf 11)\]"
-    readonly FG_BASE0="\[$(tput setaf 12)\]"
-    readonly FG_BASE1="\[$(tput setaf 14)\]"
-    readonly FG_BASE2="\[$(tput setaf 7)\]"
-    readonly FG_BASE3="\[$(tput setaf 15)\]"
+    readonly FG_BASE03="\[$(tput setaf 8)\]"  #brblack
+    readonly FG_BASE02="\[$(tput setaf 0)\]"  #black
+    readonly FG_BASE01="\[$(tput setaf 10)\]" #brgreen
+    readonly FG_BASE00="\[$(tput setaf 11)\]" #bryellow
+    readonly FG_BASE0="\[$(tput setaf 12)\]"  #brblue
+    readonly FG_BASE1="\[$(tput setaf 14)\]"  #brcyan
+    readonly FG_BASE2="\[$(tput setaf 7)\]"   #white
+    readonly FG_BASE3="\[$(tput setaf 15)\]"  #brwhite
 
     readonly BG_BASE03="\[$(tput setab 8)\]"
     readonly BG_BASE02="\[$(tput setab 0)\]"
@@ -37,14 +47,14 @@ __powerline() {
     readonly BG_BASE2="\[$(tput setab 7)\]"
     readonly BG_BASE3="\[$(tput setab 15)\]"
 
-    readonly FG_YELLOW="\[$(tput setaf 3)\]"
-    readonly FG_ORANGE="\[$(tput setaf 9)\]"
-    readonly FG_RED="\[$(tput setaf 1)\]"
-    readonly FG_MAGENTA="\[$(tput setaf 5)\]"
-    readonly FG_VIOLET="\[$(tput setaf 13)\]"
-    readonly FG_BLUE="\[$(tput setaf 4)\]"
-    readonly FG_CYAN="\[$(tput setaf 6)\]"
-    readonly FG_GREEN="\[$(tput setaf 2)\]"
+    readonly FG_YELLOW="\[$(tput setaf 3)\]"  #yellow
+    readonly FG_ORANGE="\[$(tput setaf 9)\]"  #brred
+    readonly FG_RED="\[$(tput setaf 1)\]"     #red
+    readonly FG_MAGENTA="\[$(tput setaf 5)\]" #magenta
+    readonly FG_VIOLET="\[$(tput setaf 13)\]" #brmagenta
+    readonly FG_BLUE="\[$(tput setaf 4)\]"    #blue
+    readonly FG_CYAN="\[$(tput setaf 6)\]"    #cyan
+    readonly FG_GREEN="\[$(tput setaf 2)\]"   #green
 
     readonly BG_YELLOW="\[$(tput setab 3)\]"
     readonly BG_ORANGE="\[$(tput setab 9)\]"
