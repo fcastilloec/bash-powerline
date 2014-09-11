@@ -113,8 +113,15 @@ __powerline() {
             local BG_EXIT="$BG_RED"
             local FG_EXIT="$FG_RED"
         fi
-
-        PS1="$BG_BLUE$FG_BASE3 \h $RESET"
+        PS1=""
+        #if [[ $(whoami) -eq "root" ]]; then
+#          PS1+="$BG_RED$FG_BASE3 \u $RESET"
+#          PS1+="$BG_BLUE$FG_RED$PROMPT_DIVIDER$RESET"
+#        else
+#          PS1+="$BG_BASE02$FG_BASE3 \u $RESET"
+#          PS1+="$BG_BLUE$FG_BASE02$PROMPT_DIVIDER$RESET"
+        #fi
+        PS1+="$BG_BLUE$FG_BASE3 \h $RESET"
         PS1+="$BG_BASE00$FG_BLUE$PROMPT_DIVIDER$RESET"
         PS1+="$BG_BASE00$FG_BASE3 \w $RESET"
         if (__is_git_branch); then
