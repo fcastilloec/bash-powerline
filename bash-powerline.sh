@@ -9,15 +9,12 @@ __powerline() {
     # █       
 
     # symbols
-    readonly PS_SYMBOL_DARWIN=''
-    readonly PS_SYMBOL_LINUX='\$'
-    readonly PS_SYMBOL_OTHER='%'
     readonly GIT_BRANCH_CHANGED_SYMBOL='+'
     readonly GIT_NEED_PUSH_SYMBOL='⇡'
     readonly GIT_NEED_PULL_SYMBOL='⇣'
 
     # This is working for me, but I need to figure out
-    # a good way to indicate whether we should use 
+    # a good way to indicate whether we should use
     # powerline-fonts or not.
     if [[ $TERM = "xterm-16color" ]]; then
       # use standard fonts
@@ -29,7 +26,7 @@ __powerline() {
     fi
 
     # Solarized colorscheme
-    readonly FG_BASE03="\[$(tput setaf 8)\]"  #brblack
+    readonly FG_BASE03="\[$(tput setaf 8)\]"  #brblacksource
     readonly FG_BASE02="\[$(tput setaf 0)\]"  #black
     readonly FG_BASE01="\[$(tput setaf 10)\]" #brgreen
     readonly FG_BASE00="\[$(tput setaf 11)\]" #bryellow
@@ -70,18 +67,6 @@ __powerline() {
     readonly RESET="\[$(tput sgr0)\]"
     readonly BOLD="\[$(tput bold)\]"
 
-    # what OS?
-    case "$(uname)" in
-        Darwin)
-            readonly PS_SYMBOL=$PS_SYMBOL_DARWIN
-            ;;
-        Linux)
-            readonly PS_SYMBOL=$PS_SYMBOL_LINUX
-            ;;
-        *)
-            readonly PS_SYMBOL=$PS_SYMBOL_OTHER
-    esac
-
     __is_git_branch() {
       if (hash git &> /dev/null); then
         git rev-parse --is-inside-work-tree &> /dev/null
@@ -116,14 +101,16 @@ __powerline() {
     ps1() {
         # Check the exit code of the previous command and display different
         # colors in the prompt accordingly.
-        if [ $? -eq 0 ]; then
-            local BG_EXIT="$BG_GREEN"
-            local FG_EXIT="$FG_GREEN"
-        else
+        if ![ $? -eq 0 ]; then
             local BG_EXIT="$BG_RED"
             local FG_EXIT="$FG_RED"
+        else
+            local BG_EXIT="$BG_GREEN"
+            local FG_EXIT="$FG_GREEN"
         fi
+
         PS1=""
+
         if [[ $(whoami) == "root" ]]; then
           PS1+="$BG_RED$FG_BASE3 \u $RESET"
           PS1+="$BG_BASE00$FG_RED$PROMPT_DIVIDER$RESET"
@@ -139,7 +126,6 @@ __powerline() {
         else
             PS1+="$BG_EXIT$FG_BASE00$PROMPT_DIVIDER$RESET"
         fi
-        PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET"
         PS1+="$FG_EXIT$PROMPT_DIVIDER$RESET "
     }
 
