@@ -4,6 +4,9 @@
 
 __powerline() {
 
+    ## CONFIG
+    readonly max_path_depth = 3
+
     ## standard fonts
     # ▷ ◣ ▶︎ ➤ 〉  $ % ⑂ + ⇡ ⇣
 
@@ -120,13 +123,13 @@ __powerline() {
 
       if [[ $pwd = ~* ]]; then
         # shorten path if more than 2 directories lower than home
-        if [[ $pathDepth > 2 ]]; then
+        if [[ $pathDepth > $max_path_depth ]]; then
           pwd="~  ...  ${split[lastPosition]}"
         fi
       else
         # In other than home, shorten path when greater than 3
         # directories deep.
-        if [[ $pathDepth > 3 ]]; then
+        if [[ $pathDepth > $max_path_depth ]]; then
 
           pwd="/  ${split[0]}   ...   ${split[lastPosition]}"
         else
