@@ -107,12 +107,11 @@ __powerline() {
       # substitude ~ for $HOME
       local pwd=$(sed -e "s|^$HOME|~|" <<< $pwd)
 
-      # count how many backslashes
-      local pathDepth=$(grep -o / <<< $pwd | grep -c /)
-
       # get an array of directories
       local split=(${pwd//\// })
 
+      # count how many backslashes
+      local pathDepth=${#split[@]}
       # Substitude '  ' for instances of '/'
       pwd=$(sed -e "s|/|  |g" <<< $pwd)
 
