@@ -100,24 +100,39 @@ __powerline() {
         fi
     }
 
-    # # from https://github.com/Hexcles/bash-powerline
-    # __pwd() {
-    #   # Use ~ to represent $HOME prefix
-    #   local pwd=$(pwd | sed -e "s|^$HOME|~|")
-    #   if [[ ( $pwd = ~\/*\/* || $pwd = \/*\/*/* ) && ${#pwd} > $MAX_PATH_LENGTH ]]; then
-    #     local split=(${pwd//\// })
-    #     if [[ $pwd = ~* ]]; then
-    #       pwd="~/.../${split[-1]}"
-    #     else
-    #       pwd="/${split[0]}/.../${split[-1]}"
-    #     fi
-    #   fi
-    #   printf $pwd
-    # }
+    # guidance from https://github.com/Hexcles/bash-powerline
     __pwd() {
-      for c in `echo $PWD | tr "/" " "`; do
-          echo -n "$c  "
-      done
+      local pwd=$(pwd)
+
+      # substitude ~ for $HOME
+      local pwd=$(sed -e "s|^$HOME|~|" <<< $pwd)
+
+      # count how many backslashes
+      local pathDepth=$(grep -o / <<< $pwd | grep -c /)
+
+      # get an array of directories
+      local split=(${pwd//\// })
+
+      # Substitude '  ' for instances of '/'
+      pwd=$(sed -e "s|/|  |g" <<< $pwd)
+
+
+      if [[ $pwd = ~* ]]; then
+        # shorten path if more than 2 directories lower than home
+        if [[ $pathDepth > 2 ]]; then
+          pwd="~  ...  ${split[-1]}"
+        fi
+      else
+        # In other than home, shorten path when greater than 3
+        # directories deep.
+        if [[ $pathDepth > 3 ]]; then
+          pwd="/  ${split[0]}   ...   ${split[-1]}"
+        else
+          # append a backslash to the front of pwd
+          pwd=$(sed -e "s|^ |/  |" <<< $pwd)
+        fi
+      fi
+      echo -n $pwd
     }
 
     ps1() {
