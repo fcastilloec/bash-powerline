@@ -5,7 +5,7 @@
 __powerline() {
 
     ## CONFIG
-    readonly max_path_depth = 3
+    readonly max_path_depth=3
 
     ## standard fonts
     # ▷ ◣ ▶︎ ➤ 〉  $ % ⑂ + ⇡ ⇣
