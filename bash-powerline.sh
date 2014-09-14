@@ -112,6 +112,8 @@ __powerline() {
 
       # count how many backslashes
       local pathDepth=${#split[@]}
+      lastPosition=$((pathDepth-1))
+
       # Substitude '  ' for instances of '/'
       pwd=$(sed -e "s|/|  |g" <<< $pwd)
 
@@ -119,13 +121,14 @@ __powerline() {
       if [[ $pwd = ~* ]]; then
         # shorten path if more than 2 directories lower than home
         if [[ $pathDepth > 2 ]]; then
-          pwd="~  ...  ${split[-1]}"
+          pwd="~  ...  ${split[lastPosition]}"
         fi
       else
         # In other than home, shorten path when greater than 3
         # directories deep.
         if [[ $pathDepth > 3 ]]; then
-          pwd="/  ${split[0]}   ...   ${split[-1]}"
+
+          pwd="/  ${split[0]}   ...   ${split[lastPosition]}"
         else
           # append a backslash to the front of pwd
           pwd=$(sed -e "s|^ |/  |" <<< $pwd)
