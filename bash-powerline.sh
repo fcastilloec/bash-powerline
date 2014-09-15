@@ -30,7 +30,7 @@ __powerline() {
 
   # Solarized colorscheme
   readonly fg_base03="\[$(tput setaf 8)\]"  #brblacksource
-  readonly fg_base03="\[$(tput setaf 0)\]"  #black
+  readonly fg_base02="\[$(tput setaf 0)\]"  #black
   readonly fg_base01="\[$(tput setaf 10)\]" #brgreen
   readonly fg_base00="\[$(tput setaf 11)\]" #bryellow
   readonly fg_base0="\[$(tput setaf 12)\]"  #brblue
