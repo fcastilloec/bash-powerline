@@ -102,14 +102,20 @@ __powerline() {
   }
 
   # guidance from https://github.com/Hexcles/bash-powerline
-  __pwd() {
-    local pwd=$(pwd)
+  __getpwd() {
+    local my_pwd=$(pwd)
 
     # substitude ~ for $HOME
-    local pwd=$(sed -e "s|^$HOME|~|" <<< $pwd)
+    local my_pwd=$(sed -e "s|^$HOME|~|" <<< $my_pwd)
 
     # get an array of directories
-    local split=(${pwd//\// })
+    # local split=(${my_pwd//\// })
+    # ???
+    local oIFS=$IFS
+    local IFS='/'
+    read -ra split <<< "$my_pwd"
+    IFS=$oIFS
+
     # count how many backslashes
     local pathDepth=${#split[@]}
 
@@ -117,24 +123,24 @@ __powerline() {
     lastPosition=$((pathDepth-1))
 
     # Substitude '  ' for instances of '/'
-    pwd=$(sed -e "s|/|  |g" <<< $pwd)
+    my_pwd=$(sed -e "s|/|  |g" <<< $my_pwd)
 
-    if [[ $pwd = ~* ]]; then
+    if [[ $my_pwd = ~* ]]; then
       # shorten path if more than 2 directories lower than home
       if [[ $pathDepth > $max_path_depth ]]; then
-        pwd="~  ...  ${split[lastPosition]}"
+        my_pwd="~  ...  ${split[lastPosition]}"
       fi
     else
       # In other than home, shorten path when greater than 3
       # directories deep.
       if [[ $pathDepth > $max_path_depth ]]; then
-        pwd="/  ${split[0]}   ...   ${split[lastPosition]}"
+        my_pwd="/  ${split[1]}   ...   ${split[lastPosition]}"
       else
         # append a backslash to the front of pwd
-        pwd=$(sed -e "s|^ |/  |" <<< $pwd)
+        my_pwd=$(sed -e "s|^|\/ |" <<< $my_pwd)
       fi
     fi
-    echo -n $pwd
+    echo -n "$my_pwd"
   }
 
   ps1() {
@@ -160,7 +166,7 @@ __powerline() {
     fi
 
     # path
-    PS1+="$bg_base00$fg_base3 $(__pwd) $reset_colors"
+    PS1+="$bg_base00$fg_base3 $(__getpwd) $reset_colors"
 
     # git status
     if (__is_git_branch); then
