@@ -140,7 +140,7 @@ __powerline() {
         my_pwd=$(sed -e "s|^|\/ |" <<< $my_pwd)
       fi
     fi
-    echo -n "$my_pwd"
+    echo "$my_pwd"
   }
 
   ps1() {
