@@ -6,8 +6,8 @@
 __powerline() {
 
   ## USER CONFIG ##
-  readonly max_path_depth=3
-  readonly path_separator='/'
+  readonly MAX_PATH_DEPTH=3
+  readonly PATH_SEPARATOR='/'
 
   ## standard fonts
   # ▷ ◣ ▶︎ ➤ 〉  $ % ⑂ + ⇡ ⇣
@@ -15,20 +15,20 @@ __powerline() {
   # █       
 
   # Symbols Config
-  readonly git_branch_changed_symbol='+'
-  readonly git_need_push_symbol='⇡'
-  readonly git_need_pull_symbol='⇣'
+  readonly GIT_BRANCH_CHANGED_SYMBOL='+'
+  readonly GIT_NEED_PUSH_SYMBOL='⇡'
+  readonly GIT_NEED_PULL_SYMBOL='⇣'
 
   # This is working for me, but I need to figure out
   # a good way to indicate whether we should use
   # powerline-fonts or not.
   if [[ $TERM = "xterm-16color" ]]; then
     # use standard fonts
-    readonly prompt_divider=''
-    readonly git_branch_symbol='⑂'
+    readonly PROMPT_DIVIDER=''
+    readonly GIT_BRANCH_SYMBOL='⑂'
   else # use powerline-fonts
-    readonly prompt_divider=''
-    readonly git_branch_symbol=''
+    readonly PROMPT_DIVIDER=''
+    readonly GIT_BRANCH_SYMBOL=''
   fi
 
   # Solarized colorscheme
@@ -50,7 +50,7 @@ __powerline() {
   readonly bg_base2="\[$(tput setab 7)\]"
   readonly bg_base3="\[$(tput setab 15)\]"
 
-  readonly fg_yelllow="\[$(tput setaf 3)\]"  #yellow
+  readonly fg_yellow="\[$(tput setaf 3)\]"  #yellow
   readonly fg_orange="\[$(tput setaf 9)\]"  #brred
   readonly fg_red="\[$(tput setaf 1)\]"     #red
   readonly fg_magenta="\[$(tput setaf 5)\]" #magenta
@@ -92,17 +92,17 @@ __powerline() {
     [ -n "$branch" ] || return  # git branch not found
 
     # branch is modified?
-    [ -n "$(git status --porcelain)" ] && marks+=" $git_branch_changed_symbol"
+    [ -n "$(git status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
 
     # how many commits local branch is ahead/behind of remote?
     stat="$(git status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
     aheadN="$(echo "$stat" | grep -o 'ahead \d\+' | grep -o '\d\+')"
     behindN="$(echo "$stat" | grep -o 'behind \d\+' | grep -o '\d\+')"
-    [ -n "$aheadN" ] && marks+=" $git_need_push_symbol$aheadN"
-    [ -n "$behindN" ] && marks+=" $git_need_pull_symbol$behindN"
+    [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
+    [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
 
     # print the git branch segment without a trailing newline
-    printf "$git_branch_symbol $branch$marks"
+    echo -n "$GIT_BRANCH_SYMBOL $branch$marks"
   }
 
   __get_pwd() {
@@ -111,7 +111,7 @@ __powerline() {
 
     my_pwd=$(pwd)
 
-    # substitude ~ for $HOME
+    # substitute ~ for $HOME
     my_pwd=$(sed -e "s|^$HOME|~|" <<< "$my_pwd")
 
     local IFS='/'
@@ -124,21 +124,21 @@ __powerline() {
     local lastPosition=$((pathDepth-1))
 
     # Substitute '/' for user's visual path separator
-    [[ "$path_separator" != '/' ]] && my_pwd=$(sed -e "s|/|$path_separator|g" <<< "$my_pwd")
+    [[ "$PATH_SEPARATOR" != '/' ]] && my_pwd=$(sed -e "s|/|$PATH_SEPARATOR|g" <<< "$my_pwd")
 
     if [[ $my_pwd = ~* ]]; then
       # shorten path if more than 2 directories lower than home
-      if [[ $pathDepth > $max_path_depth ]]; then
-        my_pwd="~$path_separator...$path_separator${split[lastPosition]}"
+      if [[ $pathDepth > $MAX_PATH_DEPTH ]]; then
+        my_pwd="~$PATH_SEPARATOR...$PATH_SEPARATOR${split[lastPosition]}"
       fi
     else
       # In other than home, shorten path when greater than 3 directories deep.
-      if [[ $pathDepth > $max_path_depth ]]; then
-        [[ $path_separator != '/' ]] && my_pwd="/$path_separator" || my_pwd='/'
-        my_pwd+="${split[1]}$path_separator...$path_separator${split[lastPosition]}"
+      if [[ $pathDepth > $MAX_PATH_DEPTH ]]; then
+        [[ $PATH_SEPARATOR != '/' ]] && my_pwd="/$PATH_SEPARATOR" || my_pwd='/'
+        my_pwd+="${split[1]}$PATH_SEPARATOR...$PATH_SEPARATOR${split[lastPosition]}"
       else
         # append a backslash to the front of pwd
-        [[ "$path_separator" != '/' ]] && my_pwd=$(sed -e "s|^|/|" <<< "$my_pwd")
+        [[ "$PATH_SEPARATOR" != '/' ]] && my_pwd=$(sed -e "s|^|/|" <<< "$my_pwd")
       fi
     fi
     echo "$my_pwd"
@@ -174,10 +174,10 @@ __powerline() {
     # username
     if [[ $(whoami) == "root" ]]; then
       PS1+="$bg_red$fg_base3 \u $reset_colors"
-      PS1+="$bg_base00$fg_red$prompt_divider$reset_colors"
+      PS1+="$bg_base00$fg_red$PROMPT_DIVIDER$reset_colors"
     else
       PS1+="$bg_blue$fg_base3 \u $reset_colors"
-      PS1+="$bg_base00$fg_blue$prompt_divider$reset_colors"
+      PS1+="$bg_base00$fg_blue$PROMPT_DIVIDER$reset_colors"
     fi
 
     # path
@@ -185,14 +185,14 @@ __powerline() {
 
     # git status
     if [[ $is_git -eq 0 ]]; then
-      PS1+="$bg_base03$fg_base00$prompt_divider$reset_colors"
+      PS1+="$bg_base03$fg_base00$PROMPT_DIVIDER$reset_colors"
       PS1+="$bg_base03$fg_base02 $(__git_info) $reset_colors"
-      PS1+="$bg_exit$fg_base03$prompt_divider$reset_colors"
+      PS1+="$bg_exit$fg_base03$PROMPT_DIVIDER$reset_colors"
     else
-      PS1+="$bg_exit$fg_base00$prompt_divider$reset_colors"
+      PS1+="$bg_exit$fg_base00$PROMPT_DIVIDER$reset_colors"
     fi
     # segment transition
-    PS1+="$fg_exit$prompt_divider$reset_colors "
+    PS1+="$fg_exit$PROMPT_DIVIDER$reset_colors "
   }
 
   PROMPT_COMMAND=ps1
